@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RemoteRodl>
+	<Server>
+		<Name>GameLibrary</Name>
+		<ServerUri>http://127.0.0.1:8099/Bin</ServerUri>
+	</Server>
+</RemoteRodl>

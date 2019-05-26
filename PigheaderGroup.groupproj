@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{CE3FF8ED-6B53-43CE-A558-8931940B1E30}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Pigheader.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="PigheaderClient.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="Pigheader">
+        <MSBuild Projects="Pigheader.dproj"/>
+    </Target>
+    <Target Name="Pigheader:Clean">
+        <MSBuild Projects="Pigheader.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Pigheader:Make">
+        <MSBuild Projects="Pigheader.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="PigheaderClient">
+        <MSBuild Projects="PigheaderClient.dproj"/>
+    </Target>
+    <Target Name="PigheaderClient:Clean">
+        <MSBuild Projects="PigheaderClient.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="PigheaderClient:Make">
+        <MSBuild Projects="PigheaderClient.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="Pigheader;PigheaderClient"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="Pigheader:Clean;PigheaderClient:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="Pigheader:Make;PigheaderClient:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
