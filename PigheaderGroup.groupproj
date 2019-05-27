@@ -9,6 +9,9 @@
         <Projects Include="PigheaderClient.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="GameConsole.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -35,14 +38,23 @@
     <Target Name="PigheaderClient:Make">
         <MSBuild Projects="PigheaderClient.dproj" Targets="Make"/>
     </Target>
+    <Target Name="GameConsole">
+        <MSBuild Projects="GameConsole.dproj"/>
+    </Target>
+    <Target Name="GameConsole:Clean">
+        <MSBuild Projects="GameConsole.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="GameConsole:Make">
+        <MSBuild Projects="GameConsole.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="Pigheader;PigheaderClient"/>
+        <CallTarget Targets="Pigheader;PigheaderClient;GameConsole"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Pigheader:Clean;PigheaderClient:Clean"/>
+        <CallTarget Targets="Pigheader:Clean;PigheaderClient:Clean;GameConsole:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Pigheader:Make;PigheaderClient:Make"/>
+        <CallTarget Targets="Pigheader:Make;PigheaderClient:Make;GameConsole:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

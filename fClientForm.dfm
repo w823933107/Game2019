@@ -19,14 +19,8 @@ object ClientForm: TClientForm
     ActivePage = tsEmulator
     Align = alTop
     TabOrder = 0
-    ExplicitLeft = 32
-    ExplicitTop = 8
-    ExplicitWidth = 633
     object tsEmulator: TTabSheet
       Caption = 'Emulator'
-      ExplicitLeft = 0
-      ExplicitTop = 40
-      ExplicitWidth = 625
       object lblEmulatorIndex: TLabel
         Left = 3
         Top = 3

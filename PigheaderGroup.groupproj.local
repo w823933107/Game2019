@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
-  <Default.Personality>
-    <Projects ActiveProject="E:\手游2019\PigheaderClient.dproj"/>
-  </Default.Personality>
+	<Default.Personality>
+		<Projects ActiveProject="E:\Game2019\trunk\Pigheader.dproj"/>
+	</Default.Personality>
 </BorlandProject>

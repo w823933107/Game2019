@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
-  <Transactions>
-    <Transaction>2019/05/26 10:07:58.693,=E:\手游2019\GameLibrary_Intf.pas</Transaction>
-    <Transaction>2019/05/26 10:09:00.056,=E:\手游2019\Unit1.pas</Transaction>
-    <Transaction>2019/05/26 10:09:13.177,E:\手游2019\uGame.pas=E:\手游2019\Unit1.pas</Transaction>
-    <Transaction>2019/05/26 10:10:02.989,=E:\手游2019\ObjInterf.inc</Transaction>
-    <Transaction>2019/05/26 10:10:08.870,=E:\手游2019\uObj.pas</Transaction>
+	<Transactions>
+    <Transaction>2019/05/26 10:07:58.000.693,=E:\手游2019\GameLibrary_Intf.pas</Transaction>
+    <Transaction>2019/05/26 10:09:00.000.056,=E:\手游2019\Unit1.pas</Transaction>
+    <Transaction>2019/05/26 10:09:13.000.177,E:\手游2019\uGame.pas=E:\手游2019\Unit1.pas</Transaction>
+    <Transaction>2019/05/26 10:10:02.000.989,=E:\手游2019\ObjInterf.inc</Transaction>
+    <Transaction>2019/05/26 10:10:08.000.870,=E:\手游2019\uObj.pas</Transaction>
   </Transactions>
 </BorlandProject>

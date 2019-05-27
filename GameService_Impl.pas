@@ -1,15 +1,17 @@
 unit GameService_Impl;
 
 {$I RemObjects.inc}
+
 interface
 
-uses 
+uses
   System.SysUtils, System.Classes, System.TypInfo,
-  uROXMLIntf, uROClientIntf, uROClasses, uROTypes, uROServer, uROServerIntf, uROSessions,
+  uROXMLIntf, uROClientIntf, uROClasses, uROTypes, uROServer, uROServerIntf,
+  uROSessions,
   uRORemoteDataModule, uRORTTIAttributes, uRORTTIServerSupport, uROArray;
 
 {$REGION 'brief info for Code-First Services'}
-  (* 
+(*
   set library name, uid, namespace, documentation:
   uRORTTIServerSupport.RODLLibraryName := 'LibraryName';
   uRORTTIServerSupport.RODLLibraryID := '{2533A58A-49D9-47CC-B77A-FFD791F425BE}';
@@ -27,9 +29,9 @@ uses
   [ROSynchronizedSingletonClassFactory]
   [ROPooledClassFactory(PoolSize,PoolBehavior,PreInitializePool)] - only 1st param is mandatore
   [ROPerClientClassFactory(TimeoutSeconds)]
-  
+
   other (optional) attributes:
-  [ROAbstract] - Marks the service as abstract. it cannot be called directly (service only)  
+  [ROAbstract] - Marks the service as abstract. it cannot be called directly (service only)
   [ROServiceRequiresLogin] - Sets the 'RequiresSession' property to true at runtime. (service only)
   [RORole('role')]  - allow role (service&service methods only)
   [RORole('!role')] - deny role, (service&service methods only)
@@ -43,7 +45,7 @@ uses
   serialization mode for properties, method parameters, arrays and service's functions results
   [ROStreamAs(Ansi)]
   [ROStreamAs(UTF8)]
-  
+
   backward compatibility attributes:
   [ROSerializeAsAnsiString] - alias for [ROStreamAs(Ansi)]
   [ROSerializeAsUTF8String] - alias for [ROStreamAs(UTF8)]
@@ -56,16 +58,16 @@ uses
   [ROEnumSoapName('sxFemale','soap_sxFemale')]
   [ROEnumSoapName('sxMale','soap_sxMale')]
   TSex = (
-    sxMale,
-    sxFemale
+  sxMale,
+  sxFemale
   );
   TMyStruct = class(TROComplexType)
   private
-    fA: Integer;
+  fA: Integer;
   published
-    property A :Integer read fA write fA;
-    [ROStreamAs(UTF8)]
-    property AsUtf8: String read fAsUtf8 write fAsUtf8;
+  property A :Integer read fA write fA;
+  [ROStreamAs(UTF8)]
+  property AsUtf8: String read fAsUtf8 write fAsUtf8;
   end;
 
   TMyStructArray = class(TROArray<TMyStruct>);
@@ -75,74 +77,86 @@ uses
 
   [ROEventSink]
   IMyEvents = interface(IROEventSink)
-    ['{75F9A466-518A-4B09-9DC4-9272B1EEFD95}']
-    procedure OnMyEvent([ROStreamAs(Ansi)] const aStr: String);
+  ['{75F9A466-518A-4B09-9DC4-9272B1EEFD95}']
+  procedure OnMyEvent([ROStreamAs(Ansi)] const aStr: String);
   end;
 
   [ROService('MyService')]
   TMyService = class(TRORemoteDataModule)
   private
   public
-    [ROServiceMethod]
-    [ROStreamAs(Ansi)]
-    function Echo([ROStreamAs(Ansi)] const aValue: string):string;
+  [ROServiceMethod]
+  [ROStreamAs(Ansi)]
+  function Echo([ROStreamAs(Ansi)] const aValue: string):string;
   end;
 
   simple usage of event sinks:
-    //ev: IROEventWriter<IMyEvents>;
-    ..
-    ev := EventRepository.GetWriter<IMyEvents>(Session.SessionID);
-    ev.Event.OnMyEvent('Message');
+  //ev: IROEventWriter<IMyEvents>;
+  ..
+  ev := EventRepository.GetWriter<IMyEvents>(Session.SessionID);
+  ev.Event.OnMyEvent('Message');
 
   for using custom class factories, use these attributes:
   [ROSingletonClassFactory]
   [ROSynchronizedSingletonClassFactory]
   [ROPooledClassFactory(PoolSize,PoolBehavior,PreInitializePool)]
   [ROPerClientClassFactory(TimeoutSeconds)]
-  
-or replace 
------------
-initialization
-  RegisterCodeFirstService(TNewService1);
-end.
------------
-  with
------------
-procedure Create_NewService1(out anInstance : IUnknown);
-begin
-  anInstance := TNewService1.Create(nil);
-end;
 
-var
+  or replace
+  -----------
+  initialization
+  RegisterCodeFirstService(TNewService1);
+  end.
+  -----------
+  with
+  -----------
+  procedure Create_NewService1(out anInstance : IUnknown);
+  begin
+  anInstance := TNewService1.Create(nil);
+  end;
+
+  var
   fClassFactory: IROClassFactory;
-initialization
+  initialization
   fClassFactory := TROClassFactory.Create(__ServiceName, Create_NewService1, TRORTTIInvoker);
   //RegisterForZeroConf(fClassFactory, Format('_TRORemoteDataModule_rosdk._tcp.',[__ServiceName]));
-finalization
+  finalization
   UnRegisterClassFactory(fClassFactory);
   fClassFactory := nil;
-end.
------------
-  *)
+  end.
+  -----------
+*)
 {$ENDREGION}
 
-const 
-  __ServiceName ='GameService';
+const
+  __ServiceName = 'GameService';
+
 type
-  
+
   [ROService(__ServiceName)]
   TGameService = class(TRORemoteDataModule)
   private
   public
-    //[ROServiceMethod]
-    //procedure NewMethod;
+    // [ROServiceMethod]
+    // procedure NewMethod;
+    [ROServiceMethod]
+    function Helloworld: string;
   end;
 
 implementation
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 {$R *.dfm}
+{ TGameService }
+
+function TGameService.Helloworld: string;
+begin
+
+  Result := 'hellworld'
+end;
 
 initialization
-  RegisterCodeFirstService(TGameService);
+
+RegisterCodeFirstService(TGameService);
+
 end.

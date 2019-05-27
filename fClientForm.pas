@@ -9,7 +9,7 @@ uses
   uROWinInetHTTPChannel,
   System.TypInfo, uROAsync, uROServerLocator, uROChannelAwareComponent,
   uROBaseConnection, uROTransportChannel, uROBaseHTTPClient, uROComponent,
-  uROMessage, Vcl.ComCtrls, uGame;
+  uROMessage, Vcl.ComCtrls, uGame,uLd;
 
 type
   TClientForm = class(TForm)
