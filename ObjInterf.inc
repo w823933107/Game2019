@@ -2026,7 +2026,7 @@ type
 
   end;
 
-  TPighead = Class(TInterfacedObject, IPighead)
+  TCustomObj = Class(TInterfacedObject, IPighead)
   Private
     obj: Isuxin;
   Public
@@ -2635,7 +2635,7 @@ type
     Function SetColGapNoDict(col_gap: Integer): Integer; Virtual;
   End;
 
-  TWy = Class(TInterfacedObject, IPighead)
+  TNormalObj = Class(TInterfacedObject, IPighead)
   Private
     obj: IObj;
   Public

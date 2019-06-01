@@ -152,7 +152,7 @@
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
         <DCCReference Include="uObj.pas"/>
-        <DCCReference Include="uGame.pas"/>
+        <DCCReference Include="uGameManager.pas"/>
         <DCCReference Include="uLd.pas"/>
         <DCCReference Include="uConfig.pas"/>
         <DCCReference Include="uComm.pas"/>

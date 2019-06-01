@@ -8,6 +8,7 @@ object ClientForm: TClientForm
   ParentFont = True
   OldCreateOrder = False
   Position = poScreenCenter
+  OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
@@ -16,7 +17,7 @@ object ClientForm: TClientForm
     Top = 0
     Width = 652
     Height = 345
-    ActivePage = tsEmulator
+    ActivePage = tsBase
     Align = alTop
     TabOrder = 0
     object tsEmulator: TTabSheet
@@ -107,6 +108,55 @@ object ClientForm: TClientForm
         OnClick = btnList2Click
       end
     end
+    object tsBase: TTabSheet
+      Caption = 'Base'
+      ImageIndex = 1
+      object btnStart: TButton
+        Left = 0
+        Top = 16
+        Width = 75
+        Height = 25
+        Caption = 'Start'
+        TabOrder = 0
+        OnClick = btnStartClick
+      end
+      object btnStop: TButton
+        Left = 3
+        Top = 78
+        Width = 75
+        Height = 25
+        Caption = 'Stop'
+        TabOrder = 1
+        OnClick = btnStopClick
+      end
+      object btnStartExistWnds: TButton
+        Left = 3
+        Top = 47
+        Width = 75
+        Height = 25
+        Caption = 'StartExistWnds'
+        TabOrder = 2
+        OnClick = btnStartExistWndsClick
+      end
+      object btnSortWnd: TButton
+        Left = 3
+        Top = 109
+        Width = 75
+        Height = 25
+        Caption = 'SortWnd'
+        TabOrder = 3
+        OnClick = btnSortWndClick
+      end
+      object btnTest: TButton
+        Left = 216
+        Top = 96
+        Width = 75
+        Height = 25
+        Caption = 'btnTest'
+        TabOrder = 4
+        OnClick = btnTestClick
+      end
+    end
   end
   object mmoLog: TMemo
     Left = 0
@@ -121,8 +171,8 @@ object ClientForm: TClientForm
   end
   object ROMessage: TROBinMessage
     Envelopes = <>
-    Left = 460
-    Top = 304
+    Left = 608
+    Top = 359
   end
   object ROChannel: TROWinInetHTTPChannel
     UserAgent = 'Remoting SDK'
@@ -130,14 +180,20 @@ object ClientForm: TClientForm
     ServerLocators = <>
     TargetUrl = 'http://127.0.0.1:8099/bin'
     TrustInvalidCA = False
-    Left = 368
-    Top = 320
+    Left = 608
+    Top = 455
   end
   object RORemoteService: TRORemoteService
     ServiceName = 'GameService'
     Channel = ROChannel
     Message = ROMessage
-    Left = 504
-    Top = 328
+    Left = 608
+    Top = 407
+  end
+  object OEM: TOmniEventMonitor
+    OnTaskMessage = OEMTaskMessage
+    OnTaskTerminated = OEMTaskTerminated
+    Left = 608
+    Top = 311
   end
 end

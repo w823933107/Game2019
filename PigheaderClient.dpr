@@ -5,8 +5,12 @@ uses
   Forms,
   fClientForm in 'fClientForm.pas' {ClientForm},
   GameLibrary_Intf in 'GameLibrary_Intf.pas',
-  uGame in 'uGame.pas',
-  uObj in 'uObj.pas';
+  uGameManager in 'uGameManager.pas',
+  uObj in 'uObj.pas',
+  uInterfaces in 'uInterfaces.pas',
+  uRegistrations in 'uRegistrations.pas',
+  uLd in 'uLd.pas',
+  uGame in 'uGame.pas';
 
 {$R *.res}
 

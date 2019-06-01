@@ -7,9 +7,9 @@ uses
   System.SysUtils,
   System.StrUtils,
   GameLibrary_Intf in 'GameLibrary_Intf.pas',
-  GameLibrary_ServerAccess in 'GameLibrary_ServerAccess.pas' {ServerAccess_GameLibrary: TDataModule} ,
+  GameLibrary_ServerAccess in 'GameLibrary_ServerAccess.pas' {ServerAccess_GameLibrary: TDataModule},
   uObj in 'uObj.pas',
-  uGame in 'uGame.pas',
+  uGameManager in 'uGameManager.pas',
   uLd in 'uLd.pas',
   uConfig in 'uConfig.pas',
   uComm in 'uComm.pas';

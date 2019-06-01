@@ -9,7 +9,8 @@ uses
   uROWinInetHTTPChannel,
   System.TypInfo, uROAsync, uROServerLocator, uROChannelAwareComponent,
   uROBaseConnection, uROTransportChannel, uROBaseHTTPClient, uROComponent,
-  uROMessage, Vcl.ComCtrls, uGame,uLd;
+  uROMessage, Vcl.ComCtrls, uLd, OtlComm, uInterfaces, OtlParallel, OtlCommon,
+  OtlSync, OtlTask, OtlTaskControl, OtlEventMonitor;
 
 type
   TClientForm = class(TForm)
@@ -29,6 +30,13 @@ type
     btnKillApp: TButton;
     btnList2: TButton;
     mmoLog: TMemo;
+    tsBase: TTabSheet;
+    btnStart: TButton;
+    btnStop: TButton;
+    btnStartExistWnds: TButton;
+    btnSortWnd: TButton;
+    btnTest: TButton;
+    OEM: TOmniEventMonitor;
     procedure btnLaunchClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnQuitClick(Sender: TObject);
@@ -36,11 +44,27 @@ type
     procedure btnKillAppClick(Sender: TObject);
     procedure btnQuitAllClick(Sender: TObject);
     procedure btnList2Click(Sender: TObject);
+    procedure btnStartClick(Sender: TObject);
+    procedure btnStopClick(Sender: TObject);
+    procedure btnStartExistWndsClick(Sender: TObject);
+    procedure btnSortWndClick(Sender: TObject);
+    procedure btnTestClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure OEMTaskMessage(const task: IOmniTaskControl;
+      const msg: TOmniMessage);
+    procedure OEMTaskTerminated(const task: IOmniTaskControl);
   private
     { Private declarations }
-
+    FGameManager: IGameManger;
+    procedure ExcuteTask(const task: IOmniTask);
   public
     { Public declarations }
+    procedure OnLogMessage(var msg: TOmniMessage); message WM_LOG;
+    procedure OnStopMessage(var msg: TOmniMessage); message WM_STOP;
+
+    procedure OnStartOrStop(IsStart: Boolean);
+    procedure Log(msg: string);
+
   end;
 
 var
@@ -57,13 +81,13 @@ implementation
   (RORemoteService as IGameService).Sum(1,2)
 }
 
-uses GameLibrary_Intf;
+uses GameLibrary_Intf, uRegistrations, Spring.Container;
 
 {$R *.dfm}
 
 procedure TClientForm.btnKillAppClick(Sender: TObject);
 var
-  index: Integer;
+  index: integer;
 begin
   if TryStrToInt(edtEmulatorIndex.Text, index) then
     TLd.KillApp(index, edtPackageName.Text)
@@ -74,7 +98,7 @@ end;
 
 procedure TClientForm.btnLaunchClick(Sender: TObject);
 var
-  index: Integer;
+  index: integer;
 begin
   if TryStrToInt(edtEmulatorIndex.Text, index) then
     TLd.Launch(index)
@@ -85,7 +109,7 @@ end;
 procedure TClientForm.btnList2Click(Sender: TObject);
 var
   arr, arrAll: TArray<string>;
-  I: Integer;
+  I: integer;
   s: string;
   curr: string;
 begin
@@ -119,7 +143,7 @@ end;
 
 procedure TClientForm.btnQuitClick(Sender: TObject);
 var
-  index: Integer;
+  index: integer;
 begin
   if TryStrToInt(edtEmulatorIndex.Text, index) then
     TLd.Quit(index)
@@ -130,7 +154,7 @@ end;
 
 procedure TClientForm.btnRunAppClick(Sender: TObject);
 var
-  index: Integer;
+  index: integer;
 begin
   if TryStrToInt(edtEmulatorIndex.Text, index) then
     TLd.RunApp(index, edtPackageName.Text)
@@ -139,10 +163,111 @@ begin
 
 end;
 
+procedure TClientForm.btnSortWndClick(Sender: TObject);
+begin
+  FGameManager.SortWnd;
+  Log('SortWindows')
+end;
+
+procedure TClientForm.btnStartClick(Sender: TObject);
+begin
+  IF FGameManager.StartAll(OEM) then
+    OnStartOrStop(True);
+end;
+
+procedure TClientForm.btnStartExistWndsClick(Sender: TObject);
+begin
+  if FGameManager.StartExistWnds(OEM) then
+    OnStartOrStop(True);
+end;
+
+procedure TClientForm.btnStopClick(Sender: TObject);
+begin
+  FGameManager.StopAll;
+  OnStartOrStop(False);
+end;
+
+procedure TClientForm.btnTestClick(Sender: TObject);
+var
+  p: TOmniValueContainer;
+  e: TEmulatorInfo;
+begin
+  p := TOmniValueContainer.Create;
+  // p['aaa'] := '1212';
+  // p['aqw'] := self;
+  // p['a1'] := 1212;
+  // Log(p['a1']);
+  p.Free;
+  Log(SizeOf(TEmulatorInfo).ToString);
+  // TLd.SetPropByFile(1, 'networkSettings.networkSwitching', true);
+  // TLd.SetPropByFile(1, 'networkSettings.networkStatic', False);
+  // TLd.SetPropByFile(1, 'networkSettings.networkAddress', '0.0.0.0');
+  // TLd.SetPropByFile(1, 'networkSettings.networkGateway', '0.0.0.0');
+  // TLd.SetPropByFile(1, 'networkSettings.networkSubnetMask', '255.255.255.0');
+  // TLd.SetPropByFile(1, 'networkSettings.networkDNS1', '223.5.5.5');
+  // TLd.SetPropByFile(1, 'networkSettings.networkDNS2', '114.114.114.114');
+end;
+
+procedure TClientForm.ExcuteTask(const task: IOmniTask);
+var
+  emulatorInfo: TEmulatorInfo;
+begin
+  emulatorInfo := task.Param.ByName('EmnuatorInfo').ToRecord<TEmulatorInfo>;
+  repeat
+    task.Comm.Send(WM_LOG, emulatorInfo.title);
+    Sleep(1000);
+  until (task.Terminated);
+
+end;
+
+procedure TClientForm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  FGameManager.StopAll;
+end;
+
 procedure TClientForm.FormCreate(Sender: TObject);
 begin
+  gContainer := GlobalContainer;
+  ReportMemoryLeaksOnShutdown := DebugHook <> 0;
+  RegisterTypes(gContainer);
   TLd.FilePath := 'D:\Changzhi\dnplayer2\dnconsole.exe';
   mmoLog.Clear;
+  FGameManager := gContainer.Resolve<IGameManger>;
+  OnStartOrStop(False);
+end;
+
+procedure TClientForm.Log(msg: string);
+begin
+  mmoLog.Lines.Add(msg);
+end;
+
+procedure TClientForm.OEMTaskMessage(const task: IOmniTaskControl;
+  const msg: TOmniMessage);
+begin
+  Log(Format('[thread:%s]%s %s', [task.Name, DateTimeToStr(now),
+    msg.MsgData.AsString]));
+end;
+
+procedure TClientForm.OEMTaskTerminated(const task: IOmniTaskControl);
+begin
+  Log(Format('[thread:%s]%s %s', [task.Name, DateTimeToStr(now), 'terminate']));
+end;
+
+procedure TClientForm.OnLogMessage(var msg: TOmniMessage);
+begin
+  Log(msg.MsgData);
+end;
+
+procedure TClientForm.OnStartOrStop(IsStart: Boolean);
+begin
+  btnStartExistWnds.Enabled := not IsStart;
+  btnStart.Enabled := not IsStart;
+  btnStop.Enabled := IsStart;
+end;
+
+procedure TClientForm.OnStopMessage(var msg: TOmniMessage);
+begin
+  OnStartOrStop(False);
 end;
 
 end.
